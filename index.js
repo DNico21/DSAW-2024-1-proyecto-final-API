@@ -1,26 +1,22 @@
+//index.js
 const express = require('express');
+const login = require('./routes/login');
+const profile = require('./routes/profile');
+const register = require('./routes/register');
+const home = require('./routes/home');
+const PORT = process.env.PORT || 8000;
 const app = express();
-const PORT = 3000; // Puedes cambiar el puerto si es necesario
 
-// Endpoint para el login
-app.get('/login', (req, res) => {
-    // Lógica para autenticar al usuario
-    res.send('Autenticación exitosa. Usuario logueado.');
+app.get('/', (req, res) => {
+  res.send('Prueba');
 });
 
-// Endpoint para el registro
-app.post('/register', (req, res) => {
-    // Lógica para registrar un nuevo usuario
-    res.send('Usuario registrado exitosamente.');
-});
+app.use(express.json());
+app.use('/login', login);
+app.use('/profile', profile);
+app.use('/register', register);
+app.use('/', home);
 
-// Endpoint para la página principal
-app.get('/home', (req, res) => {
-    // Lógica para mostrar la página principal
-    res.send('¡Bienvenido a la página principal!');
-});
-
-// Inicia el servidor
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Server ejecutandose en: ${PORT}`);
 });
