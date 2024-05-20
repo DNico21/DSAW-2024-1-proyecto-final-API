@@ -4,7 +4,7 @@ const login = require('./routes/login');
 const profile = require('./routes/profile');
 const register = require('./routes/register');
 const home = require('./routes/home');
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.get('/', (req, res) => {
