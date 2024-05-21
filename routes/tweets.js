@@ -19,7 +19,7 @@ router.post('/', authMiddleware, async (req, res) => {
 });
 
 // Ruta para obtener tweets aleatorios
-router.get('/random', async (req, res) => {
+router.get('/random',authMiddleware, async (req, res) => {
   try {
     const tweets = await ModelTweet.aggregate([{ $sample: { size: 10 } }]); // Obtener 10 tweets aleatorios
     res.send(tweets);
@@ -91,11 +91,14 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 });
 
 
-
 // Ruta para buscar un tweet por contenido
-router.get('/search/:content', async (req, res) => {
+router.get('/search',authMiddleware, async (req, res) => {
   try {
-    const content = req.params.content;
+    const content = req.query.content; // Obtener el contenido de los query params
+
+    if (!content) {
+      return res.status(400).send({ error: 'Content parameter is required' });
+    }
 
     // Buscar el tweet por contenido
     const tweet = await ModelTweet.find({ content: { $regex: content, $options: 'i' } });
