@@ -28,7 +28,10 @@ router.post("/", async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, SECRET_KEY, { expiresIn: "1h" });
 
-    res.send({ token });
+    // Configura la cookie con el token JWT
+    res.cookie("session_token", token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+
+    res.send({ message: "Login successful" });
   } catch (error) {
     res.status(500).send({ error: "Internal server error" });
   }
