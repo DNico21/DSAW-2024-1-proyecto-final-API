@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const ModelUser = require("../userModel");
 const router = express.Router();
 
-const SECRET_KEY = "your_secret_key"; // Cambia esto por una clave secreta segura
+const SECRET_KEY = process.env.JWT_SECRET_KEY || "default_value_if_not_set";
 
 router.post("/", async (req, res) => {
   const { email, password } = req.body;
