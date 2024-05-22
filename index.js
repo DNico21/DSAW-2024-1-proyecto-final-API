@@ -6,6 +6,7 @@ const register = require("./routes/register");
 const home = require("./routes/home");
 const tweets = require("./routes/tweets");
 
+const cors = require('cors');
 const cookieParser = require('cookie-parser')
 
 const dbconnect = require("./config");
@@ -19,6 +20,11 @@ dbconnect();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: '*', // Permite solicitudes desde cualquier origen
+  credentials: true
+}));
+
 app.use("/login", login);
 app.use("/profile", profile);
 app.use("/register", register);
