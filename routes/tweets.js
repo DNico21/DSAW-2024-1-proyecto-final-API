@@ -101,8 +101,8 @@ router.get('/search', authMiddleware, async (req, res) => {
     }
 
     const query = content.startsWith('#') 
-      ? { content: { $regex: `#${content.slice(1)}\\b`, $options: 'i' } }  
-      : { content: { $regex: content, $options: 'i' } };
+    ? { content: { $regex: `#${content.slice(1)}.*`, $options: 'i' } }  // Buscar hashtags que empiecen por la letra específica
+    : { content: { $regex: content, $options: 'i' } };
 
     // Buscar el tweet por contenido o hashtag
     const tweet = await ModelTweet.find(query);
