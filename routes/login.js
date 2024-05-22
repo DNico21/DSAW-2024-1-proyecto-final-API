@@ -7,14 +7,20 @@ const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET_KEY || "default_value_if_not_set";
 
 router.post("/", async (req, res) => {
-  const { email, password } = req.body;
+  const { UserOrEmail, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).send({ error: "Email and password are required" });
+  if (!UserOrEmail || !password) {
+    return res.status(400).send({ error: "Email/Username and password are required" });
   }
 
   try {
-    const user = await ModelUser.findOne({ email });
+    // Busca el usuario por email
+    let user = await ModelUser.findOne({ email: UserOrEmail });
+
+    // Si no se encuentra por email, busca por nombre de usuario
+    if (!user) {
+      user = await ModelUser.findOne({ name: UserOrEmail });
+    }
 
     if (!user) {
       return res.status(400).send({ error: "Invalid credentials" });
