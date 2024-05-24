@@ -3,18 +3,23 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.JWT_SECRET_KEY || "default_value_if_not_set";
 
 const authMiddleware = (req, res, next) => {
-  const token = req.cookies.session_token;
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    return res.status(401).send({ error: "Access denied. No token provided." });
+    return res
+      .status(401)
+      .json({ msg: "You need a token to access this endpoint" });
   }
 
   try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded;
+    const user = jwt.verify(token, SECRET_KEY);
+    req.user = user;
     next();
-  } catch (error) {
-    res.status(400).send({ error: "Invalid token." });
+  } catch (err) {
+    return res
+      .status(401)
+      .json({ msg: "The token is not valid or has expired already" });
   }
 };
 

@@ -4,6 +4,23 @@ const ModelTweet = require("../tweetModel");
 const authMiddleware = require("../authMiddleware");
 const router = express.Router();
 
+
+
+
+// Ruta para obtener los tweets de un usuario específico
+router.get("/user/:userId", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const tweets = await ModelTweet.find({ user: userId }); // Obtener los tweets del usuario específico
+    res.send(tweets);
+  } catch (error) {
+    res.status(500).send({ error: "Error fetching user tweets" });
+  }
+});
+
+
+
+
 // Ruta para crear un nuevo tweet
 router.post("/", authMiddleware, async (req, res) => {
   try {
@@ -18,6 +35,8 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 });
 
+
+
 // Ruta para obtener tweets aleatorios
 router.get("/random", authMiddleware, async (req, res) => {
   try {
@@ -27,6 +46,9 @@ router.get("/random", authMiddleware, async (req, res) => {
     res.status(500).send({ error: "Error fetching tweets" });
   }
 });
+
+
+
 
 // Ruta para editar un tweet
 router.patch("/:id", authMiddleware, async (req, res) => {
@@ -59,6 +81,9 @@ router.patch("/:id", authMiddleware, async (req, res) => {
   }
 });
 
+
+
+
 // Ruta para eliminar un tweet
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
@@ -90,6 +115,9 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     res.status(500).send({ error: "Error deleting tweet" });
   }
 });
+
+
+
 
 // Ruta para buscar un tweet por contenido o hashtag
 router.get('/search', authMiddleware, async (req, res) => {

@@ -15,10 +15,7 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    // Busca el usuario por email
-    let user = await ModelUser.findOne({ email: UserOrEmail });
-
-    // Si no se encuentra por email, busca por nombre de usuario
+    var user = await ModelUser.findOne({ email: UserOrEmail });
     if (!user) {
       user = await ModelUser.findOne({ name: UserOrEmail });
     }
@@ -28,17 +25,16 @@ router.post("/", async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
       return res.status(400).send({ error: "Invalid credentials" });
     }
 
     const token = jwt.sign({ userId: user._id }, SECRET_KEY, { expiresIn: "1h" });
 
-    // Configura la cookie con el token JWT
-    res.cookie("session_token", token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    // Configura la cookie con una duración de 1 hora
+    return res.status(200).json({ msg: "Logged successfully", token });
 
-    res.send({ message: "Login successful" });
+    
   } catch (error) {
     res.status(500).send({ error: "Internal server error" });
   }
